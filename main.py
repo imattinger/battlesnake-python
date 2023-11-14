@@ -58,12 +58,23 @@ def move(game_state: typing.Dict) -> typing.Dict:
         if x < 0 or y < 0 or x >= board_width or y >= board_height:
             legal_moves.remove(move)
     
-    for bodypart in my_snake[1:]:
-        x, y = bodypart['x'], bodypart['y']
-        for move in legal_moves:
-            if (x, y) == move_coords[move]:
-                legal_moves.remove(move)
+    # # Prevent snake from hitting self
+    # for bodypart in my_snake[1:]:
+    #     x, y = bodypart['x'], bodypart['y']
+    #     for move in legal_moves:
+    #         if (x, y) == move_coords[move]:
+    #             legal_moves.remove(move)
     
+    # Prevent snake from hitting others
+    snakes = game_state['board']['snakes']
+    for snake in snakes:
+        for bodypart in snake['body']:
+            x, y = bodypart['x'], bodypart['y']
+            for move in legal_moves:
+                if (x, y) == move_coords[move]:
+                    legal_moves.remove(move)
+
+
     # is_move_safe = {"up": True, "down": True, "left": True, "right": True}
     
     # We've included code to prevent your Battlesnake from moving backwards
